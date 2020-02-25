@@ -7,14 +7,49 @@
 
 # Functions go here
 
+# Number Checking Function
+def num_check(question):
+    error = "Please enter a number that is more than zero"
 
+    valid = False
+    while not valid:
+        try:
+            response = float(input(question))
+
+            if response <= 0:
+                print(error)
+            else:
+
+                return response
+
+        except ValueError:
+            print(error)
+
+
+serving_size = num_check("What is the recipe serving size?")
 
 # Main Routine goes here
+dodgy_sf = "yes"
+while dodgy_sf == "yes":
 
-serving_size = float(input("What is the recipe serving size?"))
-desired_size = float(input("How many servings are needed? "))
+    desired_size = num_check("How many servings are needed? ")
 
-scale_factor = desired_size / serving_size
+    scale_factor = desired_size / serving_size
+
+    if scale_factor < 0.25:
+        dodgy_sf = input("Warning: This scale factor is very small "
+                         "and you might struggle to accurately weigh "
+                         "the ingredients. \n"
+                         "Do you want to keep going (type 'no' to change "
+                         "your desired serving size)").lower()
+
+    if scale_factor > 4:
+        dodgy_sf = input("Warning: this scale factor is very large "
+                         "and you might struggle to have enough ingredients "
+                         "or fit it into your equipment.  \n"
+                         "Do you want to keep going (type 'no' to change "
+                         "your desired serving size)").lower()
+    else:
+        dodgy_sf = "no"
 
 print("Scale Factor: {}".format(scale_factor))
-
