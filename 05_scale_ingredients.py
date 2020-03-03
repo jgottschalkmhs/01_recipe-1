@@ -9,12 +9,12 @@ def num_check(question):
         response = (input(question))
 
         if response.lower() == "xxx":
-            return "xxx"
+                return"xxx"
 
 
         else:
             try:
-                if float(response) <= 0:
+                if float(response) <=0:
                     print(error)
                 else:
                     return response
@@ -53,7 +53,7 @@ def not_blank(question, error_msg, num_ok):
 # Main Routine
 
 # Replace line below with component 3 in due course
-scale_factor = eval(input("Scale Factor: "))
+scale_factor = float(input("Scale Factor:"))
 
 # Set up empty ingredients list
 ingredients = []
@@ -63,6 +63,7 @@ stop = ""
 while stop != "xxx":
 
     amount = num_check("What is the amount for the ingredient?")
+
 
     # Stop looping if exit code is typed and there are more
     # than 2 ingredients
@@ -81,14 +82,7 @@ while stop != "xxx":
                                    "Yes")
         amount = float(amount) * scale_factor
 
-        # Remove decimal point for the whole numbers
-        if amount % 1 == 0:
-            amount = int(amount)
-        elif amount * 10 % 1 ==0:
-            amount = "{:.1f}".format(amount)
-        else: amount = "{:.2f}".format(amount)
         ingredients.append("{} units {}".format(amount, get_ingredient))
 
 # Output list
-for item in ingredients:
-    print(item)
+print(ingredients)
