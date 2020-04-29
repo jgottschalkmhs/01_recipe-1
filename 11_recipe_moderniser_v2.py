@@ -37,14 +37,15 @@ def num_check(question):
 
     valid = False
     while not valid:
-        response = (input(question))
+        response = input(question)
 
         if response.lower() == "xxx":
             return "xxx"
 
         else:
             try:
-                if float(response) <= 0:
+                response = float(response)
+                if response <= 0:
                     print(error)
                 else:
                     return response
@@ -108,11 +109,6 @@ def get_all_ingredients():
 
 
 # Conversion Function...
-
-import csv
-
-
-# Functions go here
 def general_converter(how_much, lookup, dictionary, conversion_factor):
     if lookup in dictionary:
         mult_by = dictionary.get(lookup)
@@ -125,8 +121,7 @@ def general_converter(how_much, lookup, dictionary, conversion_factor):
     return [how_much, converted]
 
 
-def unit_checker():
-    unit_to_check = input("Unit? ")
+def unit_checker(unit_to_check):
 
     # abbreviations lists
     teaspoon = ["tsp", "teaspoon", "t", "teaspoons"]
@@ -167,7 +162,8 @@ def unit_checker():
     else:
         return unit_to_check
 
-# Main routine goes here
+
+# ****** Main Routine ******
 
 # dictionaries go here
 unit_central = {
@@ -199,49 +195,6 @@ for row in csv_groceries:
     food_dictionary[row[0]] = row[1]
 
 # print(food_dictionary)
-
-# Get items etc
-
-keep_going = ""
-while keep_going == "":
-    amount = input("How much?")
-    if amount.lower() == "xxx":
-        keep_going = "stop"
-        break
-    else:
-        amount = eval(amount)
-        amount = float(amount)
-
-    # Get unit and change it to match dictionary
-    unit = unit_checker()
-    print(unit)
-    ingredient = input("Ingredient: ")
-
-    # Convert to mls if possible
-    amount = general_converter(amount, unit, unit_central, 1)
-    print(amount)
-
-    # If we converted to mls, try and convert to grams
-    if amount[1] == "yes":
-        amount_2 = general_converter(amount[0], ingredient, food_dictionary, 250)
-
-        # if the ingredient is in the list, convert it
-        if amount_2[1] == "yes":
-            print(amount_2)
-
-        # if the ingredient is not in the list, leave the unit as ml
-        else:
-            print("unchanged")
-
-    # if the unit is not mls, leave the line unchanged
-    else:
-        print("unchanged")
-
-    # keep_going = input("<enter> or q")
-
-# ****** Main Routine ******
-
-# set up Dictionaries
 
 # set up list to hold 'modernised ingredients
 modernised_recipe = []
@@ -314,23 +267,42 @@ for recipe_line in full_recipe:
             continue
 
         # convert to mls if possible...
-        amount = general_converter(amount, unit, unit_checker, 1)
-        # convert into g 
-    else:
-        modernised_recipe.append("{} {}".format(amount, unit_ingredient))
-        continue
+        amount = general_converter(amount, unit, unit_central, 1)
 
-    modernised_recipe.append("{} {} {}".format(amount, unit, ingredient))
+        # If we're in mls, try to convert to grams
+        if amount[1] == "yes":
+            amount_2 = general_converter(amount[0], ingredient, food_dictionary, 250)
+
+            # if the ingredient is in the list, convert it
+            if amount_2[1] == "yes":
+                modernised_recipe.append("{:.0f} g {}".format(amount_2[0], ingredient))     # Rather than printing, update modernised list (g)
+
+            # if the ingredient is not in the list, leave the unit as ml
+            else:
+                modernised_recipe.append("{:.0f} ml {}".format(amount[0], ingredient))
+                continue
+
+        else:
+            modernised_recipe.append("{:.0f} ml {}".format(amount[0], ingredient))
+            continue
+
+        # If we are not in mls, leave the line unchanged
+
+    # Item only has ingredient (no unit)
+    else:
+        modernised_recipe.append("{:.0f} {}".format(amount, unit_ingredient))
+
 
 # put updated ingredient in list
+
+print()
+print()
+print("**** {} ****".format(recipe_name))
+print("Source: {}".format(source))
+print()
 
 # output ingredient list
 for item in modernised_recipe:
     print(item)
 
-# Get ingredient amount
-# Get ingredient name
-# Get unit
-# Convert unit to ml
-# Convert from ml to g
-# Put updated ingredient in list
+
